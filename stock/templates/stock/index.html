@@ -7,6 +7,7 @@
     <title>Document</title>
 </head>
 <body>
+    <h3><a href="{% url 'stock:create' %}">새로운 주식 입력하기</a></h3>
     {% if stock_list %}
     <ul>
     {% for stock in stock_list %}
