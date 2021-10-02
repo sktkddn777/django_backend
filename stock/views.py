@@ -4,6 +4,8 @@ from django.shortcuts import redirect, render
 
 from . models import Kstock
 from .forms import StockCreateForm
+from .crawl import crawl_stock
+
 # Create your views here.
 def index(request):
   stock_list = Kstock.objects.order_by('name')
@@ -20,37 +22,13 @@ def detail(request, stock_name):
   stock = Kstock.objects.filter(name=stock_name).first()
 
   stock_name = stock_name.replace('&','')
-  url = f"https://search.naver.com/search.naver?query={stock_name}"
-  response = requests.get(url)
-  if response.status_code == 200:
-    html = response.text
-    soup = BeautifulSoup(html, 'html.parser')
-    
-    up_down = ['up','eq','dw']
-
-    for i in up_down:
-      price = soup.select_one(f'#_cs_root > div.ar_spot > div > h3 > a > span.spt_con.{i} > strong')
-      if price:
-        price = price.text
-        break
-
-    high = soup.select_one("#_cs_root > div.ar_cont > div.cont_dtcon > div > ul.lst > li.hp > dl > dd").text
-    low = soup.select_one("#_cs_root > div.ar_cont > div.cont_dtcon > div > ul.lst > li.lp > dl > dd").text
-    trading_volume = soup.select_one('#_cs_root > div.ar_cont > div.cont_dtcon > div > ul.lst > li.vl > dl > dd').text
-    foreigner = soup.select_one('#_cs_root > div.ar_cont > div.cont_dtcon > div > ul.lst > li.frr > dl > dd').text
-    chart = soup.select_one('#_cs_root > div.ar_cont > div.cont_grp > div.grp_img > div.img.graph_area.open > a > img')
-
-    context = {
-      'name': stock_name,
-      'high': high,
-      'low': low,
-      'trading': trading_volume,
-      'foreigner': foreigner,
-      'chart': chart['src'],
-      'revenue': int(price.replace(',','')) - stock.buy_price,
-    }
+  crawl_data = crawl_stock(stock_name)
+  context, price = crawl_data[0], crawl_data[1]
+  if 'none' in context:
+    context = context
   else:
-    context = {'none': None}
+    context['revenue'] = int(price.replace(',','')) - stock.buy_price
+
   return render(request, 'stock/detail.html', context)
 
 def new(request):
