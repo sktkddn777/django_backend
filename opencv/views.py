@@ -23,13 +23,6 @@ class VideoCamera(object):
   def __init__(self):
     self.video = cv2.VideoCapture(0)
     (self.grabbed, self.frame) = self.video.read()
-
-    # self.faces = self.face_cascade.detectMultiScale(self.gray, 1.05, 5)
-    # if len(self.faces):
-    #   print(self.faces)
-    #   for (x,y,w,h) in self.faces:
-    #     cv2.rectangle(self.frame,(x,y),(x+w,y+h),(255,0,0),2)
-
     threading.Thread(target=self.update, args=()).start()
 
 
@@ -44,15 +37,17 @@ class VideoCamera(object):
   def update(self):
     self.xml = 'opencv/harrcascades/haarcascade_frontalface_alt.xml'
     self.face_cascade = cv2.CascadeClassifier(self.xml)
-
+    self.font = cv2.FONT_HERSHEY_SIMPLEX
     while True:
       (self.grabbed, self.frame) = self.video.read()
       self.gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
-      self.faces = self.face_cascade.detectMultiScale(self.gray, 1.05, 5)
+      self.faces = self.face_cascade.detectMultiScale(self.gray, 1.3, 5)
+
       if len(self.faces):
         print(self.faces)
         for (x,y,w,h) in self.faces:
           cv2.rectangle(self.frame,(x,y),(x+w,y+h),(255,0,0),2)
+          cv2.putText(self.frame, 'Face', (x-5, y-5), self.font, 0.5,  (255,255,0), 2)
 def gen(camera):
   
   while True:
