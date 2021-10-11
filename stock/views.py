@@ -7,6 +7,8 @@ from .forms import StockCreateForm
 from .crawl import crawl_stock
 
 # Create your views here.
+
+
 def index(request):
   stock_list = Kstock.objects.order_by('name')
   context = {
