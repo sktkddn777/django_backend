@@ -18,7 +18,6 @@ from django.urls import path
 from django.urls.conf import include
 
 urlpatterns = [
-    path('opencv/', include('opencv.urls')),
     path('roadmap/', include('roadmap.urls')),
     path('stock/', include('stock.urls')),
     path('admin/', admin.site.urls),
