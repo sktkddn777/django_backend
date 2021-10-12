@@ -14,7 +14,7 @@ def signup(request):
           email=request.POST['email'],
         ) 
       auth.login(request, user) 
-      return redirect('home')
+      return redirect('user:home')
     except:
       return render(request, 'user/signup.html')
   else: 
@@ -28,7 +28,7 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth.login(request, user)
-            return redirect('home')
+            return redirect('user:home')
         else:
             return render(request, 'user/login.html', {'error': 'username or password is incorrect.'})
     else:
@@ -38,7 +38,7 @@ def login(request):
 # 로그아웃
 def logout(request):
     auth.logout(request)
-    return redirect('home')
+    return redirect('user:home')
 
 # home
 def home(request):

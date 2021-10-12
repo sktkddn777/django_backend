@@ -10,11 +10,15 @@ from .crawl import crawl_stock
 
 
 def index(request):
-  stock_list = Kstock.objects.order_by('name')
-  context = {
-    'stock_list': stock_list,
-  }
-  return render(request, 'stock/index.html', context)
+  try:
+    stock_list = Kstock.objects.filter(user=request.user).order_by('name')
+
+    context = {
+      'stock_list': stock_list,
+    }
+    return render(request, 'stock/index.html', context)
+  except:
+    return redirect('user:home')
 
 
 def detail(request, stock_name):
@@ -43,13 +47,23 @@ def create(request):
   form이 정의한 필드에 적합하면 저장.
   '''
   if request.method=='POST':
-    form = StockCreateForm(request.POST)
-    if form.is_valid():
-      post = form.save(commit=False)
-      post.save()
-      return redirect('stock:stock_index')
-    else:
-      return redirect('stock:stock_index')
+    name = request.POST['name']
+    purchase_data = request.POST['purchase_data']
+    buy_price = request.POST['buy_price']
+    description = request.POST['description']
+
+    user = request.user
+
+    stock = Kstock(
+      name = name,
+      purchase_data = purchase_data,
+      buy_price = buy_price,
+      description = description,
+
+      user = user,
+    )
+    stock.save()
+    return redirect('stock:stock_index')
   else:
     form = StockCreateForm()
     return render(request, 'stock/create.html', {'form': form})

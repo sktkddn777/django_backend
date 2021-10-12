@@ -5,7 +5,7 @@ class StockCreateForm(forms.ModelForm):
 
     class Meta:
         model = Kstock
-        fields = '__all__'
+        fields = ['name', 'purchase_data', 'buy_price', 'description']
         #['name', 'purchase_data', 'buy_price', 'description']
 
     ''' 내부적으로 구현되어 있음 (멤버변수 인스턴스)

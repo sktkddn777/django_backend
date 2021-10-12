@@ -3,6 +3,8 @@ from django.urls import path
 
 from .views import home, signup, login, logout
 
+app_name = 'user'
+
 urlpatterns = [
     path('home/', home, name='home'),
 
