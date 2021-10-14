@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block content %}
     <h3><a href="{% url 'stock:create' %}">새로운 주식 입력하기</a></h3>
     {% if stock_list %}
     <ul>
@@ -17,5 +10,4 @@
     {% else %}
     <p>No Stock</p>
     {% endif %}
-</body>
-</html>
+{% endblock %}

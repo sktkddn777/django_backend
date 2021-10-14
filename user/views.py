@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate 
 # Create your views here.
 
+def index(request):
+  return render(request, 'user/index.html')
 
 def signup(request): 
   if request.method == 'POST': 
