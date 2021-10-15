@@ -1,11 +1,14 @@
 from django.contrib import auth 
 from django.contrib.auth.models import User 
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate 
+from django.contrib.auth import authenticate, get_user
 # Create your views here.
 
 def index(request):
-  return render(request, 'user/index.html')
+  context = {
+    'name': auth.get_user(request)
+  }
+  return render(request, 'user/index.html', context)
 
 def signup(request): 
   if request.method == 'POST': 
@@ -43,5 +46,8 @@ def logout(request):
     return redirect('user:home')
 
 # home
-def home(request):
-    return render(request, 'user/home.html')
+def home(request): 
+  context = {
+    'name': auth.get_user(request)
+  }
+  return render(request, 'user/home.html', context)
